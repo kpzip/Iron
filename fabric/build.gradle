@@ -21,14 +21,17 @@ repositories {
 }
 
 loom {
+
+	//We don't want to use split environments for now
+    /*
     splitEnvironmentSourceSets()
 
 	mods {
-		"modid" {
+		"${project.mod_id}" {
 			sourceSet sourceSets.main
 			sourceSet sourceSets.client
 		}
-	}
+	}*/
 
 }
 
@@ -39,7 +42,7 @@ dependencies {
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
 	// Fabric API. This is technically optional, but you probably want it anyway.
-	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+	//modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 	implementation "fr.stardustenterprises:yanl:0.7.4"
     implementation "fr.stardustenterprises:plat4k:1.6.2"
     rust(project(":rust"))
@@ -48,9 +51,10 @@ dependencies {
 
 processResources {
 	inputs.property "version", project.version
+	inputs.property "id", project.mod_id
 
 	filesMatching("fabric.mod.json") {
-		expand "version": project.version
+		expand(["version": project.version, "id": project.mod_id])
 	}
 }
 

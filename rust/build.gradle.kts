@@ -14,7 +14,7 @@ rust {
     cargoInstallTargets.set(true)
 
     // Adding a simple target with default options
-    targets += target("i686-unknown-linux-gnu", "libtest.so")
+    //targets += target("i686-unknown-linux-gnu", "libtest.so")
 
     // Adding a target with modfified options
     targets += target("i686-pc-windows-gnu", "test.dll").apply {
@@ -33,6 +33,7 @@ rust {
         }
 
         // Custom target with different params than default
+        /*
         create("macOS-x86") {
             target = "x86_64-apple-darwin"
             outputName = "libtest64.dylib"
@@ -42,7 +43,7 @@ rust {
             env += "CC" to "o64-clang"
             env += "CXX" to "o64-clang++"
         }
-
+		
         create("macOS-aarch64") {
             target = "aarch64-apple-darwin"
             outputName = "libtest64.dylib"
@@ -50,6 +51,6 @@ rust {
             command = "cargo"
             env += "CC" to "oa64-clang"
             env += "CXX" to "oa64-clang++"
-        }
+        }*/
     }
 }

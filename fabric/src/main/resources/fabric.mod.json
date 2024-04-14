@@ -1,11 +1,11 @@
 {
 	"schemaVersion": 1,
-	"id": "iron",
+	"id": "${id}",
 	"version": "${version}",
-	"name": "Example mod",
-	"description": "This is an example description! Tell everyone what your mod is about!",
+	"name": "Iron",
+	"description": "Rewrite Minecraft in rust!",
 	"authors": [
-		"Me!"
+		"kpzip"
 	],
 	"contact": {
 		"homepage": "https://fabricmc.net/",
@@ -16,18 +16,11 @@
 	"environment": "*",
 	"entrypoints": {
 		"main": [
-			"com.example.ExampleMod"
-		],
-		"client": [
-			"com.example.ExampleModClient"
+			"xyz.kpzip.Iron"
 		]
 	},
 	"mixins": [
-		"modid.mixins.json",
-		{
-			"config": "modid.client.mixins.json",
-			"environment": "client"
-		}
+		"iron.mixins.json"
 	],
 	"depends": {
 		"fabricloader": ">=0.15.9",
@@ -36,6 +29,5 @@
 		"fabric-api": "*"
 	},
 	"suggests": {
-		"another-mod": "*"
 	}
 }

@@ -1,4 +1,6 @@
 pub mod methods;
+pub mod renderer;
+pub mod client;
 
 #[cfg(test)]
 mod tests {
