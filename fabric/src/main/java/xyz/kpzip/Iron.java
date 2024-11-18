@@ -1,13 +1,18 @@
 package xyz.kpzip;
 
+import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import net.fabricmc.api.ModInitializer;
-import net.minecraft.client.MinecraftClient;
+import net.minecraft.block.Block;
+import net.minecraft.registry.Registries;
 
 public class Iron implements ModInitializer {
 	
@@ -27,7 +32,23 @@ public class Iron implements ModInitializer {
 		// Proceed with mild caution.
 		
 		
-		formatRustFields(MinecraftClient.class);
+		//formatRustFields(MinecraftClient.class, true);
+		FileWriter out = null;
+        try {
+        	out = new FileWriter("output.txt");
+        	
+        	
+        	for (Block block : Registries.BLOCK) {
+            	String str = block.getName().toString();
+            	str = str.substring(33, str.length()-11);
+            	out.write("\t\t\"minecraft:" + str + "\",\n");
+            }
+        	out.close();
+        } catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+        	
+        }
 
 		LOGGER.info("Loading Native Libraries...");
 		
@@ -42,37 +63,51 @@ public class Iron implements ModInitializer {
 	
 	public static native int rustTest();
 	
-	private static void formatRustFields(Class<?> clazz) {
+	private static void formatRustFields(Class<?> clazz, boolean file) {
 		Field[] fs = clazz.getDeclaredFields();
-		LOGGER.info(String.valueOf(fs.length));
+		String s;
+		StringBuilder str = new StringBuilder();
 		for (Field f : fs) {
+			if (Modifier.isStatic(f.getModifiers())) continue;
 			if (f.getType() == boolean.class) {
-				LOGGER.info(f.getName() + ": bool,");
+				s = f.getName() + ": bool,\n";
 			}
 			else if (f.getType() == byte.class) {
-				LOGGER.info(f.getName() + ": i8,");
+				s = f.getName() + ": i8,\n";
 			}
 			else if (f.getType() == short.class) {
-				LOGGER.info(f.getName() + ": i16,");
+				s = f.getName() + ": i16,\n";
 			}
 			else if (f.getType() == int.class) {
-				LOGGER.info(f.getName() + ": i32,");
+				s = f.getName() + ": i32,\n";
 			}
 			else if (f.getType() == long.class) {
-				LOGGER.info(f.getName() + ": i64,");
+				s = f.getName() + ": i64,\n";
 			}
 			else if (f.getType() == char.class) {
-				LOGGER.info(f.getName() + ": i16,");
+				s = f.getName() + ": i16,\n";
 			}
 			else if (f.getType() == float.class) {
-				LOGGER.info(f.getName() + ": f32,");
+				s = f.getName() + ": f32,\n";
 			}
 			else if (f.getType() == double.class) {
-				LOGGER.info(f.getName() + ": i64,");
+				s = f.getName() + ": i64,\n";
 			}
 			else {
-				LOGGER.info(f.getName() + ": jobject,");
+				s = f.getName() + ": JObject<'a>,\n";
+			}
+			LOGGER.debug(s);
+			str.append(s);
+			
+		}
+		if (file) {
+			try {
+				Files.writeString(Path.of("rust_formatter.txt"), str.toString());
+			} catch (IOException e) {
+				System.out.println("Error writing rust data to file");
+				e.printStackTrace();
 			}
 		}
+		LOGGER.debug("Formatted " + String.valueOf(fs.length) + " Fields.");
 	}
 }
